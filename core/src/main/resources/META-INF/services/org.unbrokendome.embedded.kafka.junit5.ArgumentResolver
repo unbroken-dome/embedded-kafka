@@ -1,0 +1,2 @@
+org.unbrokendome.embedded.kafka.junit5.CoreKafkaClientArgumentResolver
+org.unbrokendome.embedded.kafka.junit5.KafkaAddressArgumentResolver

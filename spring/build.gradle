@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'maven-publish'
+    id 'com.jfrog.bintray'
+}
+
+
+dependencies {
+    api project(':core')
+    implementation 'org.springframework.kafka:spring-kafka:2.1.4.RELEASE'
+
+    implementation 'org.springframework:spring-test:5.0.4.RELEASE'
+}

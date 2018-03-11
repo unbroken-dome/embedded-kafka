@@ -1,0 +1,5 @@
+rootProject.name = 'embedded-kafka'
+
+include 'core'
+include 'reactor'
+include 'spring'

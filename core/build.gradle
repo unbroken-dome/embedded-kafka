@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'nebula.optional-base'
+    id 'maven-publish'
+    id 'com.jfrog.bintray'
+}
+
+
+dependencies {
+
+    implementation 'com.google.guava:guava:24.0-jre'
+
+    implementation 'org.slf4j:log4j-over-slf4j'
+
+    implementation 'org.apache.kafka:kafka_2.12'
+    implementation 'org.apache.zookeeper:zookeeper'
+
+    api 'org.junit.jupiter:junit-jupiter-api', optional
+}

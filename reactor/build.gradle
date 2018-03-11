@@ -1,0 +1,16 @@
+plugins {
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'nebula.optional-base'
+    id 'maven-publish'
+    id 'com.jfrog.bintray'
+}
+
+
+dependencies {
+    api project(':core')
+    api 'io.projectreactor:reactor-core'
+    api 'io.projectreactor.kafka:reactor-kafka'
+
+    testImplementation 'io.projectreactor:reactor-test'
+}

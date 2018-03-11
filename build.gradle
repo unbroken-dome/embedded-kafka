@@ -1,0 +1,99 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.2.30' apply false
+    id 'nebula.optional-base' version '3.3.0' apply false
+    id 'io.spring.dependency-management' version '1.0.4.RELEASE' apply false
+    id 'com.jfrog.bintray' version '1.8.0' apply false
+}
+
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+
+subprojects { p ->
+
+    p.ext {
+        artifactId = "embedded-kafka-$p.name".toString()
+    }
+
+    p.apply from: "$rootDir/gradle/publishing.gradle"
+
+    p.plugins.withId('io.spring.dependency-management') {
+        p.dependencyManagement {
+            dependencies {
+                dependency 'ch.qos.logback:logback-classic:1.2.3'
+
+                dependency 'com.google.code.findbugs:jsr305:3.0.2'
+
+                dependency('com.google.guava:guava:24.0-jre') {
+                    exclude 'com.google.code.findbugs:jsr305'
+                    exclude 'com.google.j2objc:j2objc-annotations'
+                    exclude 'org.codehaus.mojo:animal-sniffer-annotations'
+                }
+
+                dependency 'io.projectreactor.kafka:reactor-kafka:1.0.0.RELEASE'
+
+                dependencySet(group: 'io.projectreactor', version: '3.1.5.RELEASE') {
+                    entry 'reactor-core'
+                    entry 'reactor-test'
+                }
+
+                dependencySet(group: 'org.apache.kafka', version: '1.0.1') {
+                    entry('kafka_2.12') {
+                        exclude 'log4j:log4j'
+                        exclude 'org.slf4j:slf4j-log4j12'
+                    }
+                    entry 'kafka-clients'
+                }
+
+                dependency('org.apache.zookeeper:zookeeper:3.5.3-beta') {
+                    exclude 'log4j:log4j'
+                    exclude 'org.slf4j:slf4j-log4j12'
+                }
+
+                dependency 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.30'
+
+                dependencySet(group: 'org.junit.jupiter', version: '5.1.0') {
+                    entry 'junit-jupiter-api'
+                    entry 'junit-jupiter-engine'
+                }
+
+                dependencySet(group: 'org.slf4j', version: '1.7.25') {
+                    entry 'slf4j-api'
+                    entry 'log4j-over-slf4j'
+                }
+            }
+        }
+    }
+
+    p.plugins.withId('java') {
+        p.apply plugin: 'io.spring.dependency-management'
+
+        p.archivesBaseName = p.ext.artifactId
+
+        p.dependencies {
+            compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+            implementation 'org.slf4j:slf4j-api:1.7.25'
+            testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+            testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
+        }
+
+        p.tasks.withType(Test) {
+            useJUnitPlatform()
+        }
+    }
+
+    p.plugins.withId('org.jetbrains.kotlin.jvm') {
+        p.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+            kotlinOptions.jvmTarget = '1.8'
+        }
+
+        p.dependencies {
+            implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
+        }
+    }
+}
